@@ -1,0 +1,47 @@
+package:
+  id: libvpx
+  name: libvpx
+  version: 1.7.0.1
+  kind: lib
+  discription: |
+    libvpx
+
+base:
+  id: org.deepin.base
+  version: 20.5.0
+
+depends:
+- id: qtbase
+  version: 5.11.3.15
+- id: qttools
+  version: 5.11.3
+
+source:
+  kind: git
+  url: https://github.com/deepin-community/libvpx.git
+  version: 1.7.0.1
+  commit: 44cd1b373747317efe5d670c6324593ba1ec749b
+
+  patch:
+  - 0001-Relax-ABI-check.patch
+build:
+  kind: manual
+  manual:
+    configure: |
+      #exec bash
+      mkdir build
+      cd build
+      ../configure --prefix=${PREFIX} \
+                   --enable-pic \
+                   --enable-shared \
+                   --disable-install-bins \
+                   --disable-install-srcs \
+                   --size-limit=16384x16384 \
+                   --enable-postproc \
+                   --enable-multi-res-encoding \
+                   --enable-temporal-denoising \
+                   --enable-vp9-temporal-denoising \
+                   --enable-vp9-postproc \
+                   --target=x86_64-linux-gcc
+      make -j6
+      make -j install
